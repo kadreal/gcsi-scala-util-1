@@ -1,10 +1,5 @@
 package com.gaiam.gcsis.util
 
-/*
- * FSTest.scala
- *
- */
-
 import org.junit.Test
 import org.junit.Assert._
 import FS.implicits._
@@ -18,7 +13,7 @@ class FSTest {
             (min, candidate) => min < candidate
         }
 
-        assert(result == Some(-6))
+      assertTrue(result == Some(-6))
     }
 
      @Test
@@ -28,7 +23,7 @@ class FSTest {
             (min, candidate) => min < candidate
         }
 
-        assert(result == Some(-6))
+       assertTrue(result == Some(-6))
     }
 
 }

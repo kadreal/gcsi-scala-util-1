@@ -43,6 +43,7 @@ class SftpConnector(val env: SshEnvironment, val passphrase: String) extends Cha
 
     def withChannel[T](host: String, userName: String, port: Int)( f : (ChannelSftp) => T) : T = {
         val session = jsch.getSession(userName, host, port)
+        session.setConfig("PreferredAuthentications","publickey,keyboard-interactive,password")
         session.connect
         val channel = session.openChannel("sftp").asInstanceOf[ChannelSftp]
         channel.connect

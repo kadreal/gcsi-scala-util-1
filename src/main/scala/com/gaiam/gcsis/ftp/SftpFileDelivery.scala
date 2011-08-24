@@ -1,16 +1,15 @@
-package com.gaiam.gcsis.ftp;
+package com.gaiam.gcsis.ftp
 
 import com.gaiam.gcsis.util.FS._
-import com.gaiam.gcsis.util.FS.implicits._
-import com.jcraft.jsch.ChannelSftp;
-
+import com.jcraft.jsch.ChannelSftp
 import java.io._
+
 
 object SftpFileDelivery {
 
 
     /**
-    * Encapsilates the connector.
+    * Encapsulates the connector.
     * Wraps the SftpFileDelivery class in a FileDelivery instance that
     *  does the connecting and disconnecting.
     */
@@ -23,20 +22,22 @@ object SftpFileDelivery {
 
         val connector = new SftpConnector(SshEnvironment.gcsi, passphrase)
 
-        new FileDelivery {
-            override def deliver(relativePath: String, gen: FileGenerator) = {
+        new FileDelivery with FileRetrieval {
+            def deliver(relativePath: String, gen: FileGenerator) = {
                 connector.withChannel(host, userName)(ch => {
                     ch.cd(remotePath)
                     (new SftpFileDelivery(ch)).deliver(relativePath, gen)
                 })
             }
-            override def retrieve[T](remoteFile: String)(f: InputStream => T): T = {
+            def retrieve[T](remoteFile: String)(f: InputStream => T): T = {
                 connector.withChannel(host, userName)(ch => {
                     new SftpFileDelivery(ch).retrieve(remoteFile)(f)
                 })
             }
         }
     }
+
+
 }
 
 /**
@@ -44,19 +45,10 @@ object SftpFileDelivery {
  * upload that file to a remote FTP location.
  * 
  * @author travis.stevens@gaiam.com
- * @reviewed 2008/08/20
- * 
+ *
  */
+case class SftpFileDelivery(channel: ChannelSftp) extends FileDelivery with FileRetrieval {
 
-class SftpFileDelivery(
-    channel: ChannelSftp
-) extends FileDelivery {
-    /**
-     * 
-     * @param fileName
-     * @param output
-     * @throws java.io.IOException
-     */
     override def deliver(relativePath: String, gen: FileGenerator): Unit = {
         channel.cd(relativePath)
         using(channel.put(gen.fileName)) { out => gen.write(out) }

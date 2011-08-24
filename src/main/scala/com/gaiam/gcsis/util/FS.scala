@@ -4,12 +4,11 @@
 
 package com.gaiam.gcsis.util
 
-import java.io.Closeable
-import java.io.StringWriter
-import java.io.PrintWriter
+import java.io.{InputStream, Closeable, StringWriter, PrintWriter}
 import scala.collection.Set
 import scala.collection.SortedSet
 import com.gaiam.gcsis.util.Logging._
+import java.sql.Connection
 
 object FS {
     trait Implicits {
@@ -30,6 +29,8 @@ object FS {
         implicit def FSRichException(e: Exception): FSRichException = new FSRichException(e)
 
         implicit def FSRichFunction[A,B](f: A => B) = new FSRichFunction(f)
+
+        implicit def FSRichString(str: String) = new RichString(str)
     }
 
     object implicits extends Implicits
@@ -38,6 +39,14 @@ object FS {
         f(resource)
     } finally {
         resource.close
+    }
+
+    implicit class CloseableInputStream(is: InputStream) extends Closeable {
+      def close() {is.close}
+    }
+
+    implicit class CloseableJdbcConnection(con: Connection) extends Closeable {
+      def close() {con.close()}
     }
 
     /**
@@ -100,7 +109,12 @@ object FS {
         }
     }
 
-    class FSRichOption[A](o: Option[A]) {
+    class RichString(string: String) {
+      def toOption: Option[String] = if (string.isEmpty) None else Some(string)
+    }
+
+
+  class FSRichOption[A](o: Option[A]) {
         def plus(o2: Option[A])(implicit num: Numeric[A]) = o.flatMap(n1 => o2.map(num.plus(n1, _))).orElse(o2)
         def minus(o2: Option[A])(implicit num: Numeric[A]) = o.flatMap(n1 => o2.map(num.minus(n1, _))).orElse(o2)
     }
@@ -139,4 +153,8 @@ object FS {
     class FSRichSet[A](s: Set[A]) {
         def toSorted(implicit ord: Ordering[A]) = SortedSet(s.toSeq: _*)
     }
+
+
+
+
 }

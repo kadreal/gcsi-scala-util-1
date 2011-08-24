@@ -14,7 +14,6 @@ import org.joda.time.ReadablePeriod
 trait Clock {
   /**
    * Return the current time according to this clock.
-   * @return
    */
   def now: DateTime
 }
@@ -26,25 +25,17 @@ trait Clock {
 object Clocks {
   /**
    * A broken clock is right once a day... this is a broken clock that's simply right once.
-   *
-   * @param date
-   * @return
    */
-  def fixed(on: DateTime): Clock = {
-    new Clock {
-      def now: DateTime = {
-        on
-      }
-    }
+  def fixed(on: DateTime) = ManualClock(on)
+
+  /** Returns the current time when requested. */
+  val realtime = new Clock {
+    def now = new DateTime()
   }
 
-  val realtime = new Clock {
-    def now: DateTime = {
-      new DateTime
-    }
-  }
 }
 
+/** Does not track current time, you must move the hands manually. */
 case class ManualClock(now: DateTime) extends Clock {
 
   def forward(period: ReadablePeriod): ManualClock = {

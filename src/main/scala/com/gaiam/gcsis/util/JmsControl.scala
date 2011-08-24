@@ -17,38 +17,24 @@ class JmsControl(val connectionFactory: ConnectionFactory, val queue: Queue) {
   private var msgsSent: Int = 0
 
   def send(create: (Session) => Message) = {
-    try {
-      if (!isConnectionOpen) {
-        createConnection
-      }
-      val m: Message = create(session)
-      producer.send(m)
-      msgsSent += 1
-      if (msgsSent >= maxNumMsgs) {
-        closeConnection
-      }
+    if (!isConnectionOpen) {
+      createConnection
     }
-    catch {
-      case e: JMSException => {
-        throw new RuntimeException(e)
-      }
+    val m: Message = create(session)
+    producer.send(m)
+    msgsSent += 1
+    if (msgsSent >= maxNumMsgs) {
+      closeConnection
     }
   }
 
   def closeConnection: Unit = {
     if (isConnectionOpen) {
-      try {
-        session.close
-        con.close
-        con = null
-        session = null
-        producer = null
-      }
-      catch {
-        case ex: JMSException => {
-          throw new RuntimeException(ex)
-        }
-      }
+      session.close
+      con.close
+      con = null
+      session = null
+      producer = null
     }
   }
 

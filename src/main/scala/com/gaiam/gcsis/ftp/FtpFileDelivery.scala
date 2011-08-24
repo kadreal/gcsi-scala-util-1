@@ -1,14 +1,8 @@
-package com.gaiam.gcsis.ftp;
+package com.gaiam.gcsis.ftp
 
 import com.gaiam.gcsis.util.FS._
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import com.gaiam.gcsis.util.Logging.logger;
-import java.io.InputStream
+import com.gaiam.gcsis.util.Logging.logger
+import java.net.URL
 
 
 object FtpFileDelivery {
@@ -34,7 +28,4 @@ class FtpFileDelivery(url: URL) extends FileDelivery {
         }
     }
 
-    override def retrieve[T](remoteFile: String)(f: InputStream => T): T = {
-        throw new UnsupportedOperationException
-    }
 }

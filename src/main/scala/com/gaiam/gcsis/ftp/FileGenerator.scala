@@ -1,6 +1,6 @@
-package com.gaiam.gcsis.ftp;
+package com.gaiam.gcsis.ftp
 
-import java.io.OutputStream;
+import java.io.OutputStream
 
 /**
  * This interface represents a generator for file contents. 

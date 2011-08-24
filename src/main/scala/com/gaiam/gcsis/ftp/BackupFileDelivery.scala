@@ -57,7 +57,4 @@ class BackupFileDelivery(delegate: FileDelivery, val backupDir: File) extends Fi
         )
     }
 
-    override def retrieve[T](remoteFile: String)(f: InputStream => T): T = {
-        throw new UnsupportedOperationException
-    }
 }

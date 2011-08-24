@@ -6,38 +6,44 @@
 
     <groupId>com.gaiam.gcsi</groupId>
     <artifactId>gcsi-scala-util</artifactId>
-    <version>1.0</version>
-
+    <version>4.4b</version>
     <properties>
-        <scala.version>2.8.1</scala.version>
+        <scala.version>2.11.7</scala.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.functionaljava</groupId>
-            <artifactId>functionaljava</artifactId>
-            <version>3.0</version>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-reflect</artifactId>
+            <version>2.11.7</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.scalaz</groupId>
-            <artifactId>scalaz-core_2.8.0</artifactId>
-            <version>5.0</version>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_2.11</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalaz</groupId>
+            <artifactId>scalaz-core_2.11</artifactId>
+            <version>7.2.1</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>1.6</version>
-            <scope>compile</scope>
+            <version>2.9.3</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>1.8.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scalaj</groupId>
-            <artifactId>scalaj-collection_2.8.1</artifactId>
-            <version>1.1</version>
+            <version>1.7.21</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -54,7 +60,7 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.44-1</version>
+            <version>0.1.53</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -64,78 +70,148 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpg-jdk16</artifactId>
-            <version>1.46</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-           <groupId>com.google.inject</groupId>
-           <artifactId>guice</artifactId>
-           <version>3.0</version>
-           <scope>compile</scope>
-       </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.0</version>
+            <version>3.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_2.11</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.6.ga</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.czarism</groupId>
+            <artifactId>czarism_2.11</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.5.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>scalaz-nscala-time-gcsi_2.11</artifactId>
+            <version>0.3</version>
+        </dependency>
     </dependencies>
 
+        <distributionManagement>
+            <repository>
+                <id>bintray-gaia-maven</id>
+                <name>gaia-maven</name>
+                <url>https://api.bintray.com/maven/tstevens/maven/gcsi-scala-util/;publish=1</url>
+             </repository>
+        </distributionManagement>
+
+
     <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.2</version>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
-                        <id>scala-compile-first</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                            <goal>compile</goal>
-                        </goals>
+                    <id>scala-compile-first</id>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                        <goal>compile</goal>
+                    </goals>
                     </execution>
                     <execution>
                         <id>scala-test-compile</id>
                         <phase>process-test-resources</phase>
                         <goals>
-                            <goal>testCompile</goal>
+                          <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
+                    <recompileMode>incremental</recompileMode>
                     <jvmArgs>
                         <jvmArg>-Xss32m</jvmArg>
+                        <jvmArg>-Xms512m</jvmArg>
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>
                     <args>
-                        <!-- for compiler debugging
-                        <arg>-Ydebug</arg>
-                        <arg>-verbose</arg>
-                        -->
+                    <!-- for compiler debugging
+                    <arg>-Ydebug</arg>
+                    <arg>-verbose</arg>
+                    -->
                         <arg>-deprecation</arg>
                         <arg>-unchecked</arg>
+                        <arg>-feature</arg>
+                        <arg>-language:implicitConversions</arg>
+                        <arg>-language:higherKinds</arg>
                     </args>
                 </configuration>
-            </plugin>
-
+            </plugin>            
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>scalaz</id>
+            <name>Scalaz Releases</name>
+            <url>https://dl.bintray.com/scalaz/releases</url>
+        </repository>
+        <repository>
+            <id>mrxtravis-bintray</id>
+            <url>https://dl.bintray.com/tstevens/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
 
 </project>

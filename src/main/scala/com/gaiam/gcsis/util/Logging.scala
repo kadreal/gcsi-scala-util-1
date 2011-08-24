@@ -4,17 +4,17 @@
 
 package com.gaiam.gcsis.util
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import FS.implicits._
+import java.util.logging.Level
 
 /**
  * call-by-name wrappers for log4j.Logger
  */
 object Logging {
-    def logger(c: Class[_]) = Logger(LoggerFactory.getLogger(c))
-    def logger(s: String) = Logger(LoggerFactory.getLogger(s))
-    def logger[T](implicit m: scala.reflect.Manifest[T]) = Logger(LoggerFactory.getLogger(m.erasure))
+
+    def logger(c: Class[_]) = Logger(java.util.logging.Logger.getLogger(c.getName))
+    def logger(s: String) = Logger(java.util.logging.Logger.getLogger(s))
+    def logger[T](implicit m: scala.reflect.Manifest[T]) = Logger(java.util.logging.Logger.getLogger(m.runtimeClass.getName))
 
     trait Empty[M[_]] {
       def isEmpty[T](v: M[T]): Boolean;
@@ -31,10 +31,31 @@ object Logging {
     class ThunkHolder[ T ]( x: => T ) { def eval: T = x }
     implicit def thunkToHolder[ T ]( thunk: => T ) = new ThunkHolder( thunk )
 
-    case class Logger(l: org.slf4j.Logger) {
+    case class UtilLoggerWrapper(log: java.util.logging.Logger) {
+      def isErrorEnabled = log.isLoggable(Level.SEVERE)
+      def error = log.log(Level.SEVERE, _: String)
+      def error(msg: String, ex: Throwable) = log.log(Level.SEVERE,msg, ex)
+      def isWarnEnabled = log.isLoggable(Level.WARNING)
+      def warn = log.log(Level.WARNING, _: String)
+      def warn(msg: String, ex: Throwable) = log.log(Level.WARNING, msg, ex)
+      def isDebugEnabled = log.isLoggable(Level.FINE)
+      def debug = log.log(Level.FINE, _: String)
+      def debug(msg: String, ex: Throwable) = log.log(Level.FINE, msg, ex)
+      def isInfoEnabled = log.isLoggable(Level.INFO)
+      def info = log.log(Level.INFO, _: String)
+      def info(msg: String, ex: Throwable) = log.log(Level.INFO, msg, ex)
+      def isTraceEnabled = log.isLoggable(Level.FINEST)
+      def trace = log.log(Level.FINEST, _: String)
+      def trace(msg: String, ex: Throwable) = log.log(Level.FINEST, msg, ex)
+
+    }
+
+    case class Logger(log: java.util.logging.Logger) {
+        val l = UtilLoggerWrapper(log)
+
         private def append[T](msg: => String, flag: Boolean, write: String => Unit, f: => T): T = {
             val result = f
-            if (flag) write(if (result == ()) msg else msg + ": " + result)
+            if (flag) write(msg + ": " + result)
             result
         }
 
