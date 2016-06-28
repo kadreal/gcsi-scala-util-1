@@ -136,16 +136,6 @@
             <version>0.3</version>
         </dependency>
     </dependencies>
-
-        <distributionManagement>
-            <repository>
-                <id>bintray-gaia-maven</id>
-                <name>gaia-maven</name>
-                <url>https://api.bintray.com/maven/tstevens/maven/gcsi-scala-util/;publish=1</url>
-             </repository>
-        </distributionManagement>
-
-
     <build>
         <testResources>
             <testResource>
