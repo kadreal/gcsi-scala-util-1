@@ -6,7 +6,7 @@
 
     <groupId>com.gaiam.gcsi</groupId>
     <artifactId>gcsi-scala-util</artifactId>
-    <version>4.4b</version>
+    <version>4.4c</version>
     <properties>
         <scala.version>2.11.7</scala.version>
     </properties>

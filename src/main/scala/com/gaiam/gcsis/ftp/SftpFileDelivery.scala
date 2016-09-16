@@ -20,7 +20,7 @@ object SftpFileDelivery {
         remotePath: String
     ) =   {
 
-        val connector = new SftpConnector(SshEnvironment.gcsi, passphrase)
+        val connector = new SftpConnector(SshEnvironment.gcsiRsa, passphrase)
 
         new FileDelivery with FileRetrieval {
             def deliver(relativePath: String, gen: FileGenerator) = {

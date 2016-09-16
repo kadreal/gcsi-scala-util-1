@@ -12,16 +12,20 @@ import com.jcraft.jsch.JSch
 class SshEnvironment(val knownHosts: String, val privateKeyFile: String, val publicKeyFile: String)
 
 object SshEnvironment {
-    def defaultDsa = {
-        val home = System.getProperty("user.home")
-        new SshEnvironment(home + "/.ssh/known_hosts", home + "/.ssh/id_dsa", home + "/.ssh/id_dsa.pub")
-    }
+  def defaultDsa = {
+    val home = System.getProperty("user.home")
+    new SshEnvironment(home + "/.ssh/known_hosts", home + "/.ssh/id_dsa", home + "/.ssh/id_dsa.pub")
+  }
 
-    def gcsi = {
-        val home = System.getProperty("user.home")
-        new SshEnvironment(home + "/.ssh/known_hosts", home + "/.ssh/gcsi_id_dsa", home + "/.ssh/gcsi_id_dsa.pub")
+  def gcsiDsa = {
+    val home = System.getProperty("user.home")
+    new SshEnvironment(home + "/.ssh/known_hosts", home + "/.ssh/gcsi_id_dsa", home + "/.ssh/gcsi_id_dsa.pub")
+  }
 
-    }
+  def gcsiRsa = {
+    val home = System.getProperty("user.home")
+    new SshEnvironment(home + "/.ssh/known_hosts", home + "/.ssh/gcsi_id_rsa", home + "/.ssh/gcsi_id_rsa.pub")
+  }
 }
 
 trait ChannelConnector {
